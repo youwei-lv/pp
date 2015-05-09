@@ -30,4 +30,4 @@ qq.CC = chol(hh.SS + hh.rr*hh.uu*hh.uu');
 qq.XX = hh.rr*hh.uu;
 qq.Z0 = ZZ(hh.dd,qq.nn,qq.rr,qq.vv,qq.CC,qq.XX);
 
-qq = class(qq,'Gaussian');
+qq = class(qq,'Gaussian',class('','handle'));
