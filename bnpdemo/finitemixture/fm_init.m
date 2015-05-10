@@ -16,13 +16,13 @@ fm.nn = zeros(1,KK);
 
 % initialize mixture components
 for kk = 1:KK,
-  fm.qq{kk} = q0;
+  fm.qq{kk} = q0.copy;
 end
 
 % add data items into mixture components
 for ii = 1:fm.NN
   kk = zz(ii);
-  fm.qq{kk} = additem(fm.qq{kk},xx{ii});
+  fm.qq{kk}.additem(xx{ii});
   fm.nn(kk) = fm.nn(kk) + 1;
 end
 

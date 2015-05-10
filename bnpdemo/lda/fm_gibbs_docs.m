@@ -24,7 +24,7 @@ for iter = 1:numiter
             % remove data item xx{ii} from component qq{kk}
             kk = doc.zz(ii);
             nn(kk) = nn(kk) - 1;
-            qq{kk} = delitem(qq{kk},xx(ii));
+            delitem(qq{kk},xx(ii));
             
             % compute probabilities pp(kk) of each component kk
             pp = log(aa/KK + nn);
@@ -41,7 +41,7 @@ for iter = 1:numiter
             % add data item xx{ii} back into model (component qq{kk})
             zz(ii) = kk;
             nn(kk) = nn(kk) + 1;
-            qq{kk} = additem(qq{kk},xx(ii));
+            additem(qq{kk},xx(ii));
         end
         doc.nn = nn;
         doc.zz = zz;
@@ -51,7 +51,5 @@ for iter = 1:numiter
     sample{iter} = ss;
 end
 
-
-fm.qq = qq;
 fm.docs = docs;
 

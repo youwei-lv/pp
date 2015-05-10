@@ -21,7 +21,7 @@ fm.docs = docs;
 
 % initialize mixture components
 for kk = 1:KK,
-  fm.qq{kk} = q0;
+  fm.qq{kk} = q0.copy;
 end
 
 % add data items into mixture components
@@ -29,7 +29,7 @@ for ii = 1:fm.NN
     doc = fm.docs{ii};
     for jj = 1:length(doc.xx)
       kk = doc.zz(jj);
-      fm.qq{kk} = additem(fm.qq{kk},doc.xx(jj));
+      additem(fm.qq{kk},doc.xx(jj));
       doc.nn(kk) = doc.nn(kk) + 1;
     end
     fm.docs{ii} = doc;

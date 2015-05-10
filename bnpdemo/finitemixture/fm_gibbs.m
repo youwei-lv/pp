@@ -17,12 +17,12 @@ for iter = 1:numiter
     % remove data item xx{ii} from component qq{kk}
     kk = zz(ii);
     nn(kk) = nn(kk) - 1;
-    qq{kk} = delitem(qq{kk},xx{ii});
+    qq{kk}.delitem(xx{ii});
 
     % compute probabilities pp(kk) of each component kk
     pp = log(aa/KK + nn);
     for kk = 1:KK
-      pp(kk) = pp(kk) + logpredictive(qq{kk},xx{ii});
+      pp(kk) = pp(kk) + qq{kk}.logpredictive(xx{ii});
     end
     pp = exp(pp - max(pp));
     pp = pp / sum(pp);
@@ -34,12 +34,12 @@ for iter = 1:numiter
     % add data item xx{ii} back into model (component qq{kk})
     zz(ii) = kk;
     nn(kk) = nn(kk) + 1;
-    qq{kk} = additem(qq{kk},xx{ii});
+    qq{kk}.additem(xx{ii});
 
   end
 end
 
-fm.qq = qq;
+%fm.qq = qq;
 fm.zz = zz;
 fm.nn = nn;
 
