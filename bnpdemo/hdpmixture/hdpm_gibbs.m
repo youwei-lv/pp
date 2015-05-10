@@ -27,16 +27,18 @@ for iter = 1:numiter
       for ii = 1:length(dxx) % iterate over data items ii
           
           % remove data item xx{ii} from component qq{kk}
-          kk = dzz(ii); % kk is current dp component that data item ii belongs to
+          kk = dzz(ii); % kk is the id of the components of the dp
           dnn(kk) = dnn(kk) - 1; % subtract from number of data items in component kk
           delitem(dqq{kk},dxx{ii}); % subtract data item sufficient statistics
           
           comptblno = dtt(ii); % table no in the component tables
-          dtt_n{kk}(comptblno) = dtt_n{kk}(comptblno) - 1;
+          dtt_n{kk}(comptblno) = dtt_n{kk}(comptblno) - 1; % substract from the data number of the table
           % delete the table and decrease global number of tables if it has no customer
           if dtt_n{kk}(comptblno) == 0
-              dtt_n{kk}(comptblno) = '';
-              nn(dqq{kk}.id) = nn(dqq{kk}.id) - 1;
+              dtt_n{kk}(comptblno) = [];
+              idx = ((dzz == kk) & (dtt > comptblno));
+              dtt(idx) = dtt(idx) - 1; % relabel the table no after removing a table
+              nn(dqq{kk}.id) = nn(dqq{kk}.id) - 1; % substract the table number in global
           end
           
           % delete active component if it has become empty
@@ -46,6 +48,7 @@ for iter = 1:numiter
               comp_ref = dqq{kk};
               dqq(kk) = [];
               dnn(kk) = [];
+              dtt_n(kk) = [];
               idx = find(dzz>kk);
               dzz(idx) = dzz(idx) - 1; % relabel dish(component) no in the dp
               % if there is no table serving the dish globally, delete it
@@ -93,21 +96,22 @@ for iter = 1:numiter
               if kkk == KK+1
                   KK = KK+1;
                   nn(kkk) = 0;
-                  qq{kkk+1} = qq{kkk}.clone;
+                  qq{kkk+1} = qq{kkk}.copy;
                   qq{kkk+1}.id = qq{kkk+1}.id + 1;
               end
               
-              nn{kkk} = nn{kkk} + 1;
+              nn(kkk) = nn(kkk) + 1;
               
-              dqqidx = find(dqq == qq{kkk});
+              dqqidx = find(cellfun(@(q)q==qq{kkk},dqq(1:dKK)));
               % if the dish does not exist in current dp, then add a new
-              % component
+              % component to the dp
               if isempty(dqqidx)
                   dKK = dKK + 1;
+                  dqq{dKK+1} = qq{KK+1};
                   dqqidx = dKK;
                   dqq{dqqidx} = qq{kkk};
                   dnn(dqqidx) = 0;
-                  dtt_n{dqqidx} = '';
+                  dtt_n{dqqidx} = [];
               end
               dzz(ii) = dqqidx;
               dtt(ii) = length(dtt_n{dqqidx}) + 1; % assgin a new table
@@ -141,3 +145,4 @@ end
 hdpm.qq = qq;
 hdpm.nn = nn;
 hdpm.KK = KK;
+hdpm.dps = dps;

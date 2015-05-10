@@ -28,7 +28,7 @@ for dd = 1 : hdpm.NN
     dp.tt = ones(1,length(dp.xx)); % table no in the component tables, set to 1
     dps{dd} = dp;
     % increase global number of tables by one
-    hdpm.nn(dp.zz>0) = hdpm.nn(dp.zz>0) + 1; 
+    hdpm.nn(unique(dp.zz)) = hdpm.nn(unique(dp.zz)) + 1; 
 end
 
 hdpm.dps = dps;
@@ -46,15 +46,15 @@ for ii = 1:hdpm.NN
     dp.qq_ref = hdpm.qq;
     for jj = 1:length(dp.xx)
       kk = dp.zz(jj);
-      additem(hdpm.qq{kk},dp.xx(jj));
+      additem(hdpm.qq{kk},dp.xx{jj});
       dp.nn(kk) = dp.nn(kk) + 1;
     end
     
     idx = dp.nn > 0;
     dp.zz = relabel(dp.zz, find(idx), 1:sum(idx)); % relabel the component no in dp
     dp.nn = dp.nn(idx); % remove counts of zeros
-    dp.tt_nn = num2cell(dp.nn); % data counts in each tables serving the same dish
-    dp.qq_ref = hdpm.qq(idx);   % component handlers
+    dp.tt_n = num2cell(dp.nn); % data counts in each tables serving the same dish
+    dp.qq_ref = hdpm.qq(logical([idx,1]));   % update component handlers with the prior preserved
     dp.KK = length(dp.nn);
     hdpm.dps{ii} = dp;
 end
@@ -62,11 +62,10 @@ end
 end
 
 function [v] = relabel(v, old_label, new_label)
-    idx = zeros(length(old_label), length(v));
+    idx = true(1, length(v));
     for i = 1:length(old_label)
-        idx(i,:) = v==old_label(i);
-    end
-    for i = 1:length(old_label)
-        v(idx(i,:)) = new_label(i);
+        idx = ((v==old_label(i)) & idx);
+        v(idx) = new_label(i);
+        idx = ~idx;
     end
 end
