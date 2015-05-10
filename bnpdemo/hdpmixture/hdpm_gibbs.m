@@ -24,7 +24,7 @@ for iter = 1:numiter
       dKK = dp.KK;
       dxx = dp.xx;
       
-      for ii = 1:NN % iterate over data items ii
+      for ii = 1:length(dxx) % iterate over data items ii
           
           % remove data item xx{ii} from component qq{kk}
           kk = dzz(ii); % kk is current dp component that data item ii belongs to
@@ -47,8 +47,9 @@ for iter = 1:numiter
               dqq(kk) = [];
               dnn(kk) = [];
               idx = find(dzz>kk);
-              dzz(idx) = dzz(idx) - 1;
-              % if there is no table serving the dish, delete the dish
+              dzz(idx) = dzz(idx) - 1; % relabel dish(component) no in the dp
+              % if there is no table serving the dish globally, delete it
+              % from the global menu
               dishNo = comp_ref.id;
               if nn(dishNo) == 0
                   nn(dishNo) = [];
@@ -74,7 +75,7 @@ for iter = 1:numiter
           uu = rand;
           kk = 1+sum(uu>cumsum(pp));
           
-          % sits at a new table for which we draw a dish 
+          % sits at a new table for which we are to draw a dish 
           if kk == dKK+1
               %fprintf(1,'add component %3d. K=%3d\n',kk,KK+1);
               pp = log([nn aa_0]);
@@ -114,6 +115,7 @@ for iter = 1:numiter
               dtt_n{dqqidx}(end+1) = 1;
           else
               % sit at an existing table in the current dp
+              dnn(kk) = dnn(kk) + 1;
               dzz(ii) = kk;
               pp = dtt_n{kk}/sum(dtt_n{kk});
               comptblno = 1+sum(rand>cumsum(pp));
@@ -124,11 +126,18 @@ for iter = 1:numiter
           % add data item xx{ii} back into model (component qq{kk})
           additem(dqq{dzz(ii)},dxx{ii}); % add sufficient stats of data item
       end
+      
+      dp.zz = dzz;
+      dp.nn = dnn;
+      dp.qq_ref = dqq;
+      dp.tt = dtt;
+      dp.tt_n = dtt_n;
+      dp.KK = dKK;
+      dps{idp} = dp;
   end
 end
 
 % save variables into dpm struct
 hdpm.qq = qq;
-hdpm.zz = zz;
 hdpm.nn = nn;
 hdpm.KK = KK;
