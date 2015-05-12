@@ -24,6 +24,7 @@ end
 
 for dd = 1 : hdpm.NN
     dp.xx = docs{dd};     % data in a doc
+    dp.numdata = length(docs{dd});
     dp.zz = docs_zz{dd};  % component nos in dp
     dp.tt = ones(1,length(dp.xx)); % table no in the component tables, set to 1
     dps{dd} = dp;

@@ -1,5 +1,5 @@
-load 'monthly_sum.mat'
-load 'shopping_intervals.mat';
+load 'data/monthly_sum.mat'
+load 'data/shopping_intervals.mat';
 
 original_id = sort(unique(monthly_sum(:,3)));
 

@@ -1,4 +1,4 @@
-function dpm_demonips_summasize(dpm);
+%function dpm_demonips_summarize(dpm)
 % summarize the clusters in NIPS cluster demo.
 
 % show clusters
@@ -17,7 +17,8 @@ for kk=1:dpm.KK
     fprintf(1,'%d\t %s\n',ss(ll),authors{aa(ll)});
   end
   fprintf(1,'---\n');
-  qq = struct(dpm.qq{kk});
+  %qq = struct(dpm.qq{kk});
+  qq = dpm.qq{kk};
   [ii jj mi]=find(qq.mi);
   [mi l] = sort(mi);
   for ll=length(mi):-1:max(1,length(mi)-10)

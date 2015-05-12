@@ -28,7 +28,8 @@ for iter = 1:numiter
   if toc>lasttime+1, 
     lasttime = toc;
     fprintf(1,'DP mixture: iter# %d\n',iter);
-    dpm_demonips_summarize(dpm)
+   % dpm_demonips_summarize(dpm)
+    dpm_demonips_summarize
   end
 
   % gibbs iteration 

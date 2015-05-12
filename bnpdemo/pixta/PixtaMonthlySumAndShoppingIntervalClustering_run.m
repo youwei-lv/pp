@@ -1,4 +1,5 @@
-mkuserdata;
+%mkuserdata;
+numiter = 120;
 
 PixtaMonthlySumClustering;
-PixtaShoppingIntervalClustering;
+%PixtaShoppingIntervalClustering;

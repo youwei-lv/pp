@@ -3,7 +3,7 @@ KK = 5;
 aa = 0.1*KK;
 s0 = 5;
 ss = 5;
-numiter = 200;
+
 
 % precision matrix  ~ Wishart(hh.dd, hh.vv, hh.SS)
 % mean vector       ~ Normal(hh.dd, hh.uu, hh.rr*qq.RR)
@@ -24,17 +24,19 @@ end
 % initialize DP mixture
 fm = fm_docs_init(KK,aa,Gaussian(hh),shoppingInterval_docs,shoppingInterval_docs_zz);
 
-sampleRecord = cell(1,numiter);
+dirName = ['data/ShoppingIntervalClusteringResult_', datestr(now, 30)];
+if ~exist(dirName,'dir')
+    mkdir(dirName);
+end
+
 tic;
 for iter = 1:numiter
    fprintf(1,'iter %d using %.3f mins.\n', iter, toc/60);
    tic;
    % gibbs iteration 
-  [fm, sampleRecord{iter}] = fm_gibbs_docs(fm,1);
+  [fm, sampleRecord] = fm_gibbs_docs(fm,1);
+  save([dirName,'/',num2str(iter),'.mat'],'fm','sampleRecord')
 end
-
-save 'ShoppingIntervalClusteringResult.mat'
-
 
 clear fm sampleRecord shoppingInterval_docs shoppingInterval_docs_zz;
 
